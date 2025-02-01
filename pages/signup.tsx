@@ -5,9 +5,11 @@ import Input from '../src/components/Input';
 import { Button } from '../src/components/Button';
 import { BACKEND_URL } from '../config';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [log, setLog] = useState<boolean>(false);
+  const navigate = useNavigate()
 
   // Separate refs for login and signup
   const usernameRefSignup = useRef<HTMLInputElement>(null);
@@ -27,7 +29,7 @@ const Signup = () => {
         passwordConfirm
       });
       console.log(response);
-      alert('Signup successful!');
+      navigate('/dashboard')
     } catch (error) {
       console.error(error);
       alert('Signup failed.');
@@ -37,14 +39,20 @@ const Signup = () => {
   async function login() {
     const username = usernameRefLogin.current?.value;
     const password = passwordRefLogin.current?.value;
-
+    const passwordConfirm = passwordRefLogin.current?.value;
+    
     try {
       const response = await axios.post(BACKEND_URL + 'api/v1/login', {
         username, 
-        password
+        password,
+        passwordConfirm
       });
       console.log(response);
-      alert('Login successful!');
+
+      const jwt = response.data.token
+      console.log(jwt) 
+      localStorage.setItem("jwt", jwt)
+      navigate('/dashboard')
     } catch (error) {
       console.error(error);
       alert('Login failed.');
@@ -59,7 +67,9 @@ const Signup = () => {
           <div className="bg-white rounded-md border min-w-48 p-8">
             <h1 className='text-lg'>Login</h1>
             <Input ref={usernameRefLogin} type="text" placeholder="Enter your username" />  
-            <Input ref={passwordRefLogin} type="password" placeholder="Enter your password" />  
+            <Input ref={passwordRefLogin} type="password" placeholder="Enter your password" /> 
+            <Input ref={passwordRefLogin} type="password" placeholder="Enter your password" /> 
+             
           </div>  
           :
           <div className="bg-white rounded-md border min-w-48 p-8">

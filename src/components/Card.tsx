@@ -12,7 +12,7 @@ interface CardInterface {
   title: string;
   date?: Date;
   content?: string[] | string; //(an image of the thumbnail)
-  link: string;
+  link: string | undefined | null;
 }
 
 const defaultstyles = `p-8 rounded-md shadow-md border border-gray-100 bg-white max-w-96 `;
