@@ -6,7 +6,8 @@ import Card  from '../src/components/Card'
 import {useContent} from '../hooks/useContent'
 import { ShareIcon } from "../src/assets/icons/ShareIcon";
 import { PlusIcon } from  '../src/assets/icons/PlusIcon'
-
+import { BACKEND_URL } from "../config";
+import axios from 'axios'
 
 
 export const youtubeUrlToEmbed = (urlString: string | undefined | null): string | null | undefined => {
@@ -34,12 +35,30 @@ function Dashboard() {
 
   function closeModal() {
     setOpen(false);
-    // console.log('Clicked modal close btn')
   }
 
   function openModal() {
     setOpen(true);
-    // console.log("clicked modal open btn")
+  }
+
+  async function shareContent() {
+    
+    const tokenVal = localStorage.getItem('jwt')
+    console.log('token', tokenVal)
+    try {
+      await axios.post(BACKEND_URL+ 'api/v1/brain/share', {
+        share: true
+      }, {
+        headers: {
+          'Authorization': `Bearer ${tokenVal}`
+        }
+      }).then((res) => alert(res.data.shareableLink))
+    }
+    catch(err) {
+      console.log(err)
+    }
+
+
   }
 
   return (
@@ -49,7 +68,7 @@ function Dashboard() {
         <Modal open={open} onClose={closeModal} />
         <div className="flex justify-end gap-4">
           <Button variant="secondary" size="md" onClick={openModal} text="Add Content" startIcon={<PlusIcon size="size-6" />} />
-          <Button variant="primary" size="md" text={`Share Brain`} startIcon={<ShareIcon />} />
+          <Button variant="primary" size="md" onClick={shareContent} text={`Share Brain`} startIcon={<ShareIcon />} />
         </div>
         <div className="flex gap-6">
           {contents.map(({ type, link, title }, index) => {
