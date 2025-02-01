@@ -1,13 +1,16 @@
-import { PlusIcon } from "./assets/icons/PlusIcon"
-import { Button } from "./components/Button"
-
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Dashboard from "../pages/dashboard"
+import Signup from '../pages/signup'
 function App() {
 
   return (
     <div>
-     <Button variant="primary" size="md" onClick={()=> console.log('clciked')} text="Click here!"/>
-     <Button variant="secondary" size="lg" onClick={()=> console.log('Here ')} text="Share!" startIcon={ <PlusIcon size={`size-5`}/>}  />
-      
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Signup/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   )
 }
